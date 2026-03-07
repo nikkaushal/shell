@@ -22,4 +22,7 @@ cd /tmp/frontend
 npm ci
 npm run build
 
+rm -rf /usr/share/nginx/html/*
+cp -r /tmp/frontend/dist/* /usr/share/nginx/html/
+
 systemctl restart nginx
