@@ -10,7 +10,7 @@ ExecStart=/app/auth-service
 Restart=on-failure
 RestartSec=10
 
-Environment=DB_HOST=postgresql-dev.raghudevopsb88.online
+Environment=DB_HOST=postgres-dev.tek-nik.com
 Environment=DB_PORT=5432
 Environment=DB_USER=auth_svc_user
 Environment=DB_PASSWORD=localdev123
