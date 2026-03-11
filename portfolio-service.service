@@ -1,0 +1,21 @@
+[Unit]
+Description=WMP Portfolio Service
+After=network.target
+
+[Service]
+Type=simple
+User=appuser
+WorkingDirectory=/app
+ExecStart=/usr/bin/java -jar portfolio-service.jar
+Restart=on-failure
+RestartSec=10
+
+Environment=SPRING_PROFILES_ACTIVE=production
+Environment=SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-dev.tek-nik.com:5432/wmp?currentSchema=portfolio_schema
+Environment=SPRING_DATASOURCE_USERNAME=portfolio_svc_user
+Environment=SPRING_DATASOURCE_PASSWORD=localdev123
+Environment=JWT_SECRET=myDefaultSuperSecretKeyThatIsAtLeast256BitsLongForHS256Algorithm
+Environment=SERVER_PORT=8080
+
+[Install]
+WantedBy=multi-user.target
