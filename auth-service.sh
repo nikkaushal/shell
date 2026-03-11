@@ -1,21 +1,29 @@
-dnf install -y golang
+source common.sh
+service_name=auth-service
 
-useradd -r -s /bin/false appuser
-mkdir -p /app
+echo -e "${YC}Install golang${NC}"
+dnf install -y golang &>>$OUTPUT
+status_check
 
-cp auth-service.service /etc/systemd/system/auth-service.service
+echo -e "${YC}Update auth-service service file${NC}"
+cp ${service_name}.service /etc/systemd/system/${service_name}.service &>>$OUTPUT
+status_check
 
-curl -L -o /tmp/auth-service.tar.gz https://raw.githubusercontent.com/raghudevopsb88/wealth-project/main/artifacts/auth-service.tar.gz
+echo -e "${YC}Prepare application prerequisites${NC}" 
+app_prereq
+
+echo -e "${YC}Build auth service${NC}"
 cd /app
-tar xzf /tmp/auth-service.tar.gz
+CGO_ENABLED=0 go build -o ${service_name} ./cmd/server  &>>$OUTPUT
+status_check
 
-cd /app
-CGO_ENABLED=0 go build -o auth-service ./cmd/server
+echo -e "${YC}Change user permissions${NC}"
+chown -R appuser:appuser /app &>>$OUTPUT
+chmod o-rwx /app -R &>>$OUTPUT
+status_check
 
-chown -R appuser:appuser /app
-chmod o-rwx /app -R
-
-
+echo -e "${YC}Start auth service${NC}"
 systemctl daemon-reload
-systemctl enable auth-service
-systemctl start auth-service
+systemctl enable ${service_name} &>>$OUTPUT
+systemctl start ${service_name} &>>$OUTPUT
+status_check
