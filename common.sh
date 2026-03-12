@@ -23,3 +23,18 @@ status_check() {
     echo -e "${RC}FAILURE${NC}"
   fi
 }
+
+set_permissions() {
+  echo -e "${YC}Set Permissions${NC}"
+  chown -R appuser:appuser /app &>>$OUTPUT
+  chmod o-rwx /app -R &>>$OUTPUT
+  status_check
+}
+
+start_service() {
+  echo -e "${YC}Start ${service_name} Service${NC}"
+  systemctl daemon-reload &>>$OUTPUT
+  systemctl enable ${service_name} &>>$OUTPUT
+  systemctl start ${service_name} &>>$OUTPUT
+  status_check
+}
