@@ -5,6 +5,10 @@ echo -e "${YC}Install Java${NC}"
 dnf install -y java-21-openjdk-devel &>>$OUTPUT
 status_check
 
+echo -e "${YC}Copy Service File${NC}"
+cp ${service_name}.service /etc/systemd/system/${service_name}.service &>>$OUTPUT
+status_check
+
 echo -e "${YC}Download and Extract Application${NC}"
 app_prereq
 status_check
@@ -20,11 +24,5 @@ cp /app/build/libs/*.jar /app/${service_name}.jar &>>$OUTPUT
 status_check
 
 set_permissions
-
-echo -e "${YC}Copy Service File${NC}"
-echo "Service name: ${service_name}"
-echo "PWD: $(pwd)"
-cp ${service_name}.service /etc/systemd/system/${service_name}.service &>>$OUTPUT
-status_check
 
 start_service
